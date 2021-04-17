@@ -1,0 +1,52 @@
+name:                evths
+version:             0.1.0.0
+#synopsis:
+#description:
+homepage:            https://github.com/githubuser/evths#readme
+license:             BSD3
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2021 Author name here
+category:            Web
+extra-source-files:
+- README.md
+
+dependencies:
+  - aeson
+  - base >= 4.7 && < 5
+  - text
+
+library:
+  source-dirs:        src
+  # exposed-modules:
+  ghc-options:       -Wall
+  default-extensions: 
+    OverloadedStrings
+    NoImplicitPrelude
+    TemplateHaskell
+    QuasiQuotes
+
+
+executables:
+  evths-runner:
+    source-dirs:      app
+    main:             Main.hs
+    dependencies:
+      - evths
+
+tests:
+  spec:
+    main: Spec.hs
+    source-dirs:
+      - test
+      - src
+    # dependencies:
+      # - hspec == 2.*
+      # - QuickCheck
+      # - temporary
+      # - mockery >= 0.3
+      # - interpolate
+      # - template-haskell
+      # - HUnit >= 1.6.0.0
+    build-tools: hspec-discover
+    ghc-options:       -Wall
