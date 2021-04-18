@@ -1,6 +1,8 @@
+{-# LANGUAGE FlexibleInstances #-}
 module Evt where
 
 import           Imports
+import           Evt.StreamName
 
 -- Messaging
 data MessageData = 
@@ -13,64 +15,42 @@ data MessageMetaData =
 
     } deriving (Show)
 
-type Category = Text
-type CategoryType = Text
-type CategoryTypes = [CategoryType]
-type Id = Text
-type Ids = [Id]
-type Stream = Text
-
-data StreamNameConfig =
-    StreamNameConfig {
-        _category :: !Text,
-        _categoryTypes :: ![Text],
-        _ids :: ![Text]
-    }
-
-categoryStream :: Category -> StreamNameConfig 
-categoryStream category =
-    StreamNameConfig category [] []
-
-addId :: Id -> StreamNameConfig -> StreamNameConfig
-addId newId (StreamNameConfig category categoryTypes ids) =
-    let
-        newIds =
-            if any (==newId) ids then
-                ids
-            else
-                ids <> [newId]
-    in
-    StreamNameConfig category categoryTypes newIds
-
-addCategoryType :: CategoryType -> StreamNameConfig -> StreamNameConfig
-addCategoryType newCategoryType (StreamNameConfig category categoryTypes ids) =
-    let
-        newCategoryTypes =
-            if any (==newCategoryType) categoryTypes then
-                categoryTypes
-            else
-                sort $ newCategoryType : categoryTypes
-    in
-    StreamNameConfig category newCategoryTypes ids
-
-
-streamName :: StreamNameConfig -> Stream
-streamName (StreamNameConfig category categoryTypes ids) =
-    let
-        categoryTypesText = intercalate "+" $ sort categoryTypes
-        categoryTypesFull = if length categoryTypes > 0 then
-                                ":" <> categoryTypesText
-                            else
-                                ""
-        idsText = intercalate "+" ids
-        idsFull = if length ids > 0 then
-                    "-" <> idsText
-                  else
-                    ""
-    in
-    concat [category, categoryTypesFull, idsFull]
 
 -- MessageStore
+type Version = Int
+
+initialVersion ::Version
+initialVersion = (-1)
+
+class HasMessageStore m where
+    messageStore :: m MessageStore
+
+class ToMessageData t where
+    toMessageData :: t -> MessageData
+
+-- instance (ToJSON t) => ToMessageData t where
+--     toMessageData _ = MessageData {}
+
+class Projection a where
+    projection :: Proxy a -> p
+
+class (Get m, Put m, HasCategory m) => MessageStore m where
+    fetch :: (Projection a) => Id -> m a
+    write :: (ToMessageData md) => md -> Id -> Maybe Version -> m ()
+    writeInitial :: (ToMessageData md) => md -> Id -> m ()
+    writeInitial toMessageData' streamId = write toMessageData' streamId (Just initialVersion)
+
+class HasCategory m where
+    category :: m Category
+
+class Get m where
+    get :: Stream -> m [MessageData]
+    getLast :: Stream -> m (Maybe MessageData)
+
+class Put m where
+    put :: Stream -> MessageData -> m ()
+    putMany :: Stream -> [MessageData] -> m ()
+
 -- EventStore
 -- PositionStore
 -- Consumer
