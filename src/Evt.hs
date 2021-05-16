@@ -8,9 +8,25 @@ import           Imports
 import           Evt.StreamName
 
 -- Messaging
+{-
+id UUID NOT NULL DEFAULT gen_random_uuid()
+type text NOT NULL,
+stream_name text NOT NULL,
+metadata jsonb,
+data jsonb,
+position bigint NOT NULL,
+global_position bigserial NOT NULL,
+time TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
+-}
 data MessageData = 
-  MessageData {
-  
+  MessageData { _messageId      :: !UUID
+              , _messageType    :: !Text
+              , _streamName     :: !Text
+              , _metaData       :: !Value
+              , _data           :: !Value
+              , _position       :: !Int
+              , _globalPosition :: !Int
+              , _time           :: !UTCTime
               } deriving (Show)
 
 data MessageMetaData = 

@@ -16,7 +16,9 @@ dependencies:
   - base >= 4.7 && < 5
   - stm-actor
   - text
+  - time
   - transformers
+  - uuid
 
 library:
   source-dirs:        src
