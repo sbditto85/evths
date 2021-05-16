@@ -35,6 +35,10 @@ packages:
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
 #
+extra-deps:
+  - stm-actor-0.2.3.0@sha256:abe550c8919f591329fc00f4ad4b348f4c2a089736f5b8f587838d5fd13d6960,1854
+  - stm-queue-0.1.2.1@sha256:e5b2e652f6bfee5f761278e5dc27ac38ea3f58b122c1c6d6b6d3e193a2a93aeb,2472
+
 # extra-deps:
 # - acme-missiles-0.3
 # - git: https://github.com/commercialhaskell/stack.git

@@ -7,7 +7,7 @@ module Evt.StreamName (
     categoryStream,
     addCategoryType,
     addId,
-    streamName,
+    toStreamName,
 ) where
 
 import           Imports
@@ -52,8 +52,8 @@ addCategoryType newCategoryType (StreamNameConfig category categoryTypes ids) =
     StreamNameConfig category newCategoryTypes ids
 
 
-streamName :: StreamNameConfig -> Stream
-streamName (StreamNameConfig category categoryTypes ids) =
+toStreamName :: StreamNameConfig -> Stream
+toStreamName (StreamNameConfig category categoryTypes ids) =
   let
     categoryTypesText = intercalate "+" $ sort categoryTypes
     categoryTypesFull = if length categoryTypes > 0 then
